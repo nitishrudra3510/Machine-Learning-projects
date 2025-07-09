@@ -78,6 +78,5 @@ if user_input:
         st.session_state.chat.append("🤖 Bot: The conversation is complete. Refresh the page to start over.")
 
     # Rerun to refresh chat display and input box
-    st.experimental_rerun()
     
     st.rerun()
