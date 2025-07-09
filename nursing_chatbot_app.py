@@ -3,6 +3,9 @@ import streamlit as st
 st.set_page_config(page_title="Nursing Admission Chatbot", page_icon="🤖")
 st.title("🤖 Nursing College Admission Chatbot")
 
+
+st.markdown("**🤖 Bot:** Hello! Are you interested in admission to the Nursing College?")
+
 def respond(user_input):
     user_input = user_input.lower()
 
@@ -10,7 +13,7 @@ def respond(user_input):
         return "Biology is mandatory for B.Sc Nursing admission. You are not eligible."
     elif "biology" in user_input and "yes" in user_input:
         return ("Great! You're eligible.\n\n"
-            "B.Sc Nursing is a full-time, 4-year program with theory and hospital training.\n"
+                "B.Sc Nursing is a full-time, 4-year program with theory and hospital training.\n"
                 "Do you want to know about the fee structure?")
     elif "fee" in user_input or "fees" in user_input:
         return ("Fee Structure:\n- Tuition: ₹60,000\n- Bus: ₹10,000\n"
@@ -34,7 +37,7 @@ def respond(user_input):
     elif "eligible" in user_input:
         return ("Eligibility:\n- Biology in 12th\n- Pass PNT Exam\n- Age: 17 to 35")
     elif "hi" in user_input or "hello" in user_input:
-        return "Hello! Are you interested in admission to the Nursing College?"
+        return "Hello again! Are you interested in admission to the Nursing College?"
     elif "no" in user_input:
         return "Okay! Thank you. Reach out anytime. 😊"
     elif "yes" in user_input:
@@ -42,7 +45,6 @@ def respond(user_input):
     else:
         return "I can help with Nursing admission info like fees, eligibility, scholarships, etc."
 
-# Streamlit UI
 st.markdown("Type your question below 👇")
 
 user_query = st.text_input("You:", "")
