@@ -3,84 +3,79 @@ import streamlit as st
 st.set_page_config(page_title="Nursing Admission Chatbot", page_icon="🤖")
 st.title("🤖 Nursing College Admission Chatbot")
 
-# Initialize session state
-if 'step' not in st.session_state:
+# Initialize session state on first load
+if "step" not in st.session_state:
     st.session_state.step = 1
     st.session_state.chat = ["🤖 Bot: Hello! Are you interested in admission to the Nursing College?"]
 
-# Display conversation history
+# Display chat history
 for line in st.session_state.chat:
     st.markdown(line)
 
-# Input
-user_input = st.text_input("You:")
+# Keep input box always available
+user_input = st.text_input("You:", key=st.session_state.step)
 
 if user_input:
+    user_input = user_input.lower()
     st.session_state.chat.append(f"**You:** {user_input}")
-    user_input_lower = user_input.lower()
 
-    # Step 1: Ask for admission interest
+    # Step 1: Admission interest
     if st.session_state.step == 1:
-        if "yes" in user_input_lower:
-            bot_reply = "Great! Have you studied Biology in 12th grade?"
+        if "yes" in user_input:
+            st.session_state.chat.append("🤖 Bot: Great! Have you studied Biology in 12th grade?")
             st.session_state.step = 2
         else:
-            bot_reply = "Okay! Thank you. Reach out anytime. 😊"
-            st.session_state.step = 0  # end
-        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
+            st.session_state.chat.append("🤖 Bot: Okay! Thank you. Reach out anytime. 😊")
+            st.session_state.step = -1  # end
 
-    # Step 2: Check Biology
+    # Step 2: Biology check
     elif st.session_state.step == 2:
-        if "yes" in user_input_lower:
-            bot_reply = ("Awesome! You are eligible for B.Sc Nursing.\n"
-                         "Do you want to know the fee structure?")
+        if "yes" in user_input:
+            st.session_state.chat.append("🤖 Bot: Awesome! You're eligible. Do you want to know the fee structure?")
             st.session_state.step = 3
         else:
-            bot_reply = "Biology is mandatory for B.Sc Nursing admission. You are not eligible."
-            st.session_state.step = 0
-        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
+            st.session_state.chat.append("🤖 Bot: Biology is mandatory for admission. You're not eligible.")
+            st.session_state.step = -1
 
-    # Step 3: Fee Structure
+    # Step 3: Fee info
     elif st.session_state.step == 3:
-        if "yes" in user_input_lower:
-            bot_reply = ("Fee Structure:\n- Tuition: ₹60,000\n- Bus: ₹10,000\n"
-                         "Total: ₹70,000 (Installments: ₹30K, ₹20K, ₹20K)\n"
-                         "Do you want to know about hostel & training?")
+        if "yes" in user_input:
+            st.session_state.chat.append("🤖 Bot: Fee is ₹70,000 (Tuition: ₹60K + Bus: ₹10K) in 3 installments.\nDo you want hostel/training info?")
             st.session_state.step = 4
         else:
-            bot_reply = "Okay! Let me know if you want more info."
-        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
+            st.session_state.chat.append("🤖 Bot: Okay. Do you want hostel/training info?")
+            st.session_state.step = 4
 
-    # Step 4: Hostel Info
+    # Step 4: Hostel + Training
     elif st.session_state.step == 4:
-        if "yes" in user_input_lower:
-            bot_reply = ("🏠 Hostel has 24x7 water & electricity, CCTV, warden.\n"
-                         "🏥 Hospital training with real patients is included.\n"
-                         "Do you want to know about scholarships?")
+        if "yes" in user_input:
+            st.session_state.chat.append("🤖 Bot: Hostel has 24x7 water, CCTV, warden. Hospital training with real patients is included.\nWant to know about scholarships?")
             st.session_state.step = 5
         else:
-            bot_reply = "Alright. Do you want to know about scholarships?"
+            st.session_state.chat.append("🤖 Bot: Alright. Want to know about scholarships?")
             st.session_state.step = 5
-        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
 
-    # Step 5: Scholarships
+    # Step 5: Scholarship info
     elif st.session_state.step == 5:
-        if "yes" in user_input_lower:
-            bot_reply = ("🎓 Scholarships:\n- Post-Matric: ₹18k–₹23k\n"
-                         "- Labour Ministry: ₹40k–₹48k (for registered workers)\n"
-                         "Do you want to know the eligibility criteria?")
+        if "yes" in user_input:
+            st.session_state.chat.append("🤖 Bot: Scholarships:\n- Post-Matric: ₹18k–₹23k\n- Labour Ministry: ₹40k–₹48k (for registered workers)\nWant to know eligibility?")
             st.session_state.step = 6
         else:
-            bot_reply = "No problem. Do you want to know the eligibility criteria?"
+            st.session_state.chat.append("🤖 Bot: No worries. Want to know eligibility?")
             st.session_state.step = 6
-        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
 
-    # Step 6: Eligibility Summary
+    # Step 6: Eligibility
     elif st.session_state.step == 6:
-        if "yes" in user_input_lower:
-            bot_reply = ("✅ Eligibility:\n- 12th with Biology\n- PNT Exam passed\n- Age: 17–35\n"
-                         "Thanks for chatting! 😊")
+        if "yes" in user_input:
+            st.session_state.chat.append("🤖 Bot: Eligibility:\n- 12th with Biology\n- PNT Exam pass\n- Age 17–35\nThanks for chatting! 😊")
+            st.session_state.step = -1
         else:
-            bot_reply = "Okay, feel free to ask anything later. 😊"
-        st.session_state.step = 0
-        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
+            st.session_state.chat.append("🤖 Bot: Okay! Feel free to ask anytime later. 👋")
+            st.session_state.step = -1
+
+    # Step -1: End of chat
+    elif st.session_state.step == -1:
+        st.session_state.chat.append("🤖 Bot: The conversation is complete. Refresh the page to start over.")
+
+    # Rerun to refresh chat display and input box
+    st.experimental_rerun()
