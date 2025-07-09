@@ -79,3 +79,5 @@ if user_input:
 
     # Rerun to refresh chat display and input box
     st.experimental_rerun()
+    
+    st.rerun()
