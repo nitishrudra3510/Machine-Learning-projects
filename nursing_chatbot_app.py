@@ -3,52 +3,84 @@ import streamlit as st
 st.set_page_config(page_title="Nursing Admission Chatbot", page_icon="🤖")
 st.title("🤖 Nursing College Admission Chatbot")
 
+# Initialize session state
+if 'step' not in st.session_state:
+    st.session_state.step = 1
+    st.session_state.chat = ["🤖 Bot: Hello! Are you interested in admission to the Nursing College?"]
 
-st.markdown("**🤖 Bot:** Hello! Are you interested in admission to the Nursing College?")
+# Display conversation history
+for line in st.session_state.chat:
+    st.markdown(line)
 
-def respond(user_input):
-    user_input = user_input.lower()
+# Input
+user_input = st.text_input("You:")
 
-    if "biology" in user_input and "no" in user_input:
-        return "Biology is mandatory for B.Sc Nursing admission. You are not eligible."
-    elif "biology" in user_input and "yes" in user_input:
-        return ("Great! You're eligible.\n\n"
-                "B.Sc Nursing is a full-time, 4-year program with theory and hospital training.\n"
-                "Do you want to know about the fee structure?")
-    elif "fee" in user_input or "fees" in user_input:
-        return ("Fee Structure:\n- Tuition: ₹60,000\n- Bus: ₹10,000\n"
-                "Total: ₹70,000 (Installments: ₹30K, ₹20K, ₹20K)")
-    elif "hostel" in user_input or "training" in user_input:
-        return ("Hostel has 24x7 water, electricity, CCTV, warden.\n"
-                "Hospital training with real patients is included.")
-    elif "location" in user_input:
-        return "The college is located in Delhi. Want to know about the surrounding area?"
-    elif "recognition" in user_input or "accreditation" in user_input:
-        return "The college is recognized by the Indian Nursing Council (INC), Delhi."
-    elif "clinical" in user_input:
-        return ("Clinical Training Locations:\n- District Hospital (Backundpur)\n"
-                "- Community Health Centers\n- Regional Hospital (Chartha)\n"
-                "- Ranchi Neurosurgery Hospital (Jharkhand)")
-    elif "scholarship" in user_input:
-        return ("Scholarships:\n- Post-Matric: ₹18k–₹23k\n"
-                "- Labour Ministry: ₹40k–₹48k (for registered workers)")
-    elif "seats" in user_input:
-        return "There are a total of 60 seats available."
-    elif "eligible" in user_input:
-        return ("Eligibility:\n- Biology in 12th\n- Pass PNT Exam\n- Age: 17 to 35")
-    elif "hi" in user_input or "hello" in user_input:
-        return "Hello again! Are you interested in admission to the Nursing College?"
-    elif "no" in user_input:
-        return "Okay! Thank you. Reach out anytime. 😊"
-    elif "yes" in user_input:
-        return "Great! Have you studied Biology in 12th grade?"
-    else:
-        return "I can help with Nursing admission info like fees, eligibility, scholarships, etc."
+if user_input:
+    st.session_state.chat.append(f"**You:** {user_input}")
+    user_input_lower = user_input.lower()
 
-st.markdown("Type your question below 👇")
+    # Step 1: Ask for admission interest
+    if st.session_state.step == 1:
+        if "yes" in user_input_lower:
+            bot_reply = "Great! Have you studied Biology in 12th grade?"
+            st.session_state.step = 2
+        else:
+            bot_reply = "Okay! Thank you. Reach out anytime. 😊"
+            st.session_state.step = 0  # end
+        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
 
-user_query = st.text_input("You:", "")
+    # Step 2: Check Biology
+    elif st.session_state.step == 2:
+        if "yes" in user_input_lower:
+            bot_reply = ("Awesome! You are eligible for B.Sc Nursing.\n"
+                         "Do you want to know the fee structure?")
+            st.session_state.step = 3
+        else:
+            bot_reply = "Biology is mandatory for B.Sc Nursing admission. You are not eligible."
+            st.session_state.step = 0
+        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
 
-if user_query:
-    response = respond(user_query)
-    st.markdown(f"**🤖 Bot:** {response}")
+    # Step 3: Fee Structure
+    elif st.session_state.step == 3:
+        if "yes" in user_input_lower:
+            bot_reply = ("Fee Structure:\n- Tuition: ₹60,000\n- Bus: ₹10,000\n"
+                         "Total: ₹70,000 (Installments: ₹30K, ₹20K, ₹20K)\n"
+                         "Do you want to know about hostel & training?")
+            st.session_state.step = 4
+        else:
+            bot_reply = "Okay! Let me know if you want more info."
+        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
+
+    # Step 4: Hostel Info
+    elif st.session_state.step == 4:
+        if "yes" in user_input_lower:
+            bot_reply = ("🏠 Hostel has 24x7 water & electricity, CCTV, warden.\n"
+                         "🏥 Hospital training with real patients is included.\n"
+                         "Do you want to know about scholarships?")
+            st.session_state.step = 5
+        else:
+            bot_reply = "Alright. Do you want to know about scholarships?"
+            st.session_state.step = 5
+        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
+
+    # Step 5: Scholarships
+    elif st.session_state.step == 5:
+        if "yes" in user_input_lower:
+            bot_reply = ("🎓 Scholarships:\n- Post-Matric: ₹18k–₹23k\n"
+                         "- Labour Ministry: ₹40k–₹48k (for registered workers)\n"
+                         "Do you want to know the eligibility criteria?")
+            st.session_state.step = 6
+        else:
+            bot_reply = "No problem. Do you want to know the eligibility criteria?"
+            st.session_state.step = 6
+        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
+
+    # Step 6: Eligibility Summary
+    elif st.session_state.step == 6:
+        if "yes" in user_input_lower:
+            bot_reply = ("✅ Eligibility:\n- 12th with Biology\n- PNT Exam passed\n- Age: 17–35\n"
+                         "Thanks for chatting! 😊")
+        else:
+            bot_reply = "Okay, feel free to ask anything later. 😊"
+        st.session_state.step = 0
+        st.session_state.chat.append(f"🤖 Bot: {bot_reply}")
